@@ -13,3 +13,6 @@ index/
 
 .DS_Store
 
+
+# Virtualenv
+.venv/
