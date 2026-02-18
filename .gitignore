@@ -3,9 +3,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-.env
 venv/
-.env/
 
 index/
 *.faiss
