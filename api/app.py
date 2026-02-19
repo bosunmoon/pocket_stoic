@@ -3,6 +3,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Depends, Request
 from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
 
 from pocket_stoic.searcher import StoicSearcher
 from pocket_stoic.ollama_client import OllamaClient
@@ -11,8 +12,17 @@ INDEX_PATH = Path("index/stoic.faiss")
 META_PATH = Path("index/stoic_meta.jsonl")
 
 app = FastAPI(title="Pocket Stoic API")
+@app.get("/whoami")
+def whoami():
+    return {"app": "pocket_stoic_api", "cors": True}
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # ---- Startup: load long-lived dependencies once ----
 @app.on_event("startup")
 def startup():
