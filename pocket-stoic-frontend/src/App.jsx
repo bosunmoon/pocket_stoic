@@ -18,9 +18,10 @@ function Sources({ items }) {
         onClick={() => setOpen((v) => !v)}
         style={{
           border: "1px solid #ddd",
-          background: "white",
+          background: "black",
           padding: "8px 10px",
           borderRadius: 10,
+          textColor: "black",
           cursor: "pointer",
           fontWeight: 600,
         }}
@@ -180,7 +181,7 @@ export default function App() {
             {m.sources && <Sources items={m.sources} />}
 
             {m.error && (
-              <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: "1px solid #f3b3b3", background: "#ffecec" }}>
+              <div style={{ marginTop: 8, padding: 10, backgroundColor: "black", borderRadius: 12, border: "1px solid #f3b3b3", background: "#ffecec" }}>
                 <strong>Error:</strong> {m.error}
               </div>
             )}
