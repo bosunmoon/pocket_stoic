@@ -136,7 +136,10 @@ Write a concise answer with 2-5 bullet points and 1 short closing paragraph.
                 "citation": h.record.get("citation"),
                 "chapter_title": h.record.get("chapter_title"),
                 "final_score": h.final_score,
+                "vector_score": h.vector_score,
+                "lexical_score": h.lexical_score,
                 "meta_idx": h.meta_idx,
+                "text": h.record.get("text"),
             }
             for h in hits
         ],
