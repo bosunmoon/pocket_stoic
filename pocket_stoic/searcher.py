@@ -18,15 +18,47 @@ class Hit:
     final_score: float
     record: Dict[str, Any]
 
+STOPWORDS = {
+    "a","an","the","and","or","but","if","then","than",
+    "what","which","who","whom","whose","when","where","why","how",
+    "is","are","was","were","be","been","being",
+    "do","does","did","have","has","had",
+    "in","on","at","to","from","for","of","with","by","as",
+    "my","your","our","their","his","her","its","me","you","we","they"
+}
+
+SYNONYM_CANONICAL = {
+    "control": "agency",
+    "power": "agency",
+    "powers": "agency",
+}
+
+def normalize_token(token: str) -> str:
+    t = token.lower()
+    if len(t) > 5 and t.endswith("ing"):
+        t = t[:-3]
+    elif len(t) > 4 and t.endswith("ed"):
+        t = t[:-2]
+    elif len(t) > 4 and t.endswith("es"):
+        t = t[:-2]
+    elif len(t) > 3 and t.endswith("s"):
+        t = t[:-1]
+    return SYNONYM_CANONICAL.get(t, t)
+
 def tokenize_for_lexical(s: str) -> List[str]:
-    return re.findall(r"\b\w+\b", s.lower())
+    tokens = re.findall(r"\b\w+\b", s.lower())
+    return [normalize_token(t) for t in tokens if t not in STOPWORDS]
 
 def lexical_score(query_tokens: List[str], passage_text: str, title: str) -> float:
-    text = ((title or "") + " " + (passage_text or "")).lower()
     if not query_tokens:
         return 0.0
-    cnt = sum(1 for t in query_tokens if t in text)
-    return cnt / len(query_tokens)
+    text_tokens = set(tokenize_for_lexical((title or "") + " " + (passage_text or "")))
+    if not text_tokens:
+        return 0.0
+
+    query_set = set(query_tokens)
+    cnt = sum(1 for t in query_set if t in text_tokens)
+    return cnt / len(query_set)
 
 def load_meta(meta_path: Path) -> List[Dict[str, Any]]:
     meta: List[Dict[str, Any]] = []
